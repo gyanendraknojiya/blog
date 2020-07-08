@@ -11,7 +11,6 @@ app.get('/', (req, res)=>{
     res.render('index');
 })
 
-
-app.listen(process.env.Port || '3000',()=> {
-    console.log('Server is runninng at port 3000')
-    })
+app.listen(process.env.PORT || 3000, function () {
+    console.log("Server is running at port " + process.env.PORT);
+  });
