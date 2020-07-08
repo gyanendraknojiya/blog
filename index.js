@@ -1,4 +1,5 @@
-// jshint: esversion 6
+//jshint esversion:6
+require("dotenv").config();
 const express = require('express')
 
 
@@ -11,6 +12,6 @@ app.get('/', (req, res)=>{
 })
 
 
-app.listen('3000',()=> {
+app.listen(process.env.Port || '3000',()=> {
     console.log('Server is runninng at port 3000')
     })
