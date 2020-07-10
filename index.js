@@ -10,11 +10,11 @@ const bcrypt = require("bcrypt");
 // routes import
 const homeRoute = require("./routes/home");
 const adminRoute = require("./routes/admin");
-const postRoute = require("./routes/post")
+const postRoute = require("./routes/post");
 
 const app = express();
 app.use(express.static("public"));
-app.use('/uploads',express.static("uploads"));
+app.use("/uploads", express.static("uploads"));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 mongoose.set("useCreateIndex", true);
@@ -36,8 +36,8 @@ app.use(function (req, res, next) {
 
 // Database Connection
 mongoose.connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
 app.use(passport.initialize());
@@ -46,18 +46,14 @@ app.use(passport.session());
 // bcrypt saltRounds
 const saltRounds = 10;
 
+const User = require("./models/adminModel");
 
-const User = require('./models/adminModel')
-
-require('./config/passport.config') (passport, User)
+require("./config/passport.config")(passport, User);
 
 // set routes
 app.use("/", homeRoute);
 app.use("/admin", adminRoute);
-app.use("/post", postRoute)
-
-
-
+app.use("/post", postRoute);
 
 // app.get('/register', (req, res)=>{ res.render('register')})
 
