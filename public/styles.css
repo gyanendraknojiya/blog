@@ -212,3 +212,8 @@ a.btn-card {
     color: #fff;
 }
 /* End card section */
+
+.post-image{
+    height: auto;
+    width: 60vw;
+}

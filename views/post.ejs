@@ -1,0 +1,12 @@
+<%- include('partials/header') %> <%- include('partials/navbar') %>
+
+<div class="container">
+  <div class="text-center my-3">
+    <img  class="post-image" src="/../<%= Post.image %>" alt="" />
+  </div>
+  <h1><%= Post.title %></h1>
+
+  <%- Post.content %>
+</div>
+
+<%- include('partials/footer') %>
