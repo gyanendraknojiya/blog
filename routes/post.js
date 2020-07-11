@@ -3,6 +3,9 @@ const router = express.Router();
 const lodash = require("lodash");
 const Post = require("../models/postModel");
 const categoies = require("../models/PostCategory");
+const paginate = require("express-paginate");
+
+router.use(paginate.middleware(10, 20));
 
 const multer = require("multer");
 
@@ -16,18 +19,23 @@ var storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-router.get("/", (req, res) => {
+router.get("/", async (req, res, next) => {
   if (req.isAuthenticated()) {
-    Post.find((err, Posts) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.render("posts", { User: req.user, Posts: Posts });
-      }
-    });
-  } else {
-    res.redirect("/admin");
-  }
+  const [results, itemCount] = await Promise.all([
+    Post.find({}).limit(req.query.limit).skip(req.skip).lean().exec(),
+    Post.count({}),
+  ]);
+  const pageCount = Math.ceil(itemCount / req.query.limit);
+  res.render("posts", {
+    Posts: results,
+    pageCount,
+    itemCount,
+    activePage: req.query.page,
+    pages: paginate.getArrayPages(req)(3, pageCount, req.query.page),
+  });
+} else {
+  res.redirect('/admin')
+}
 });
 
 router.get("/add", (req, res) => {

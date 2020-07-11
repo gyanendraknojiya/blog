@@ -5,6 +5,7 @@
     <img  class="post-image" src="/../<%= Post.image %>" alt="" />
   </div>
   <h1><%= Post.title %></h1>
+ <div ><pre class="d-inline-block" > <strong>Author:</strong><%= Post.author %> </pre >  <pre class="d-inline-block" ><strong>Date:</strong><%= Post.Created_at %> </pre></div>
 
   <%- Post.content %>
 </div>

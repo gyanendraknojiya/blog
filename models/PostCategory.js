@@ -5,6 +5,7 @@ const categoies = [
   "React JS",
   "MongoDB",
   "Express JS",
+  "Technology"
 ];
 
 module.exports = categoies;

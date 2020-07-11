@@ -1,17 +1,25 @@
-const express = require('express')
-const router = express.Router()
-const Post = require('../models/postModel')
+const express = require("express");
+const router = express.Router();
+const Post = require("../models/postModel");
+const paginate = require("express-paginate");
 
-router.get('/', (req, res)=>{
-    Post.find({}, (err, posts)=>{
-        if(err){
-            console.log(err)
-        } else {
+router.use(paginate.middleware(9, 20));
 
-            res.render('home', {Post : posts})
-        }
-    })
-})
 
+
+router.get("/", async (req, res, next) => {
+  const [results, itemCount] = await Promise.all([
+    Post.find({}).limit(req.query.limit).skip(req.skip).lean().exec(),
+    Post.count({}),
+  ]);
+  const pageCount = Math.ceil(itemCount / req.query.limit);
+  res.render("home", {
+    Post: results,
+    pageCount,
+    itemCount,
+    activePage: req.query.page,
+    pages: paginate.getArrayPages(req)(3, pageCount, req.query.page),
+  });
+});
 
 module.exports = router;
