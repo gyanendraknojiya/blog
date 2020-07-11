@@ -55,7 +55,7 @@
             >
           </li>
           <li class="nav-item">
-            <a href="/posts" class="nav-link">
+            <a href="" class="nav-link">
               <i class="fas fa-list-ul"></i> Posts</a
             >
           </li>
@@ -100,7 +100,7 @@
       <div class="row">
       <div class="col-md-8">
         <form
-          action="./add"
+          action="../edit"
           class="form-group"
           method="post"
           enctype="multipart/form-data"
@@ -111,15 +111,16 @@
             id="title"
             type="text"
             name="title"
+            value="<%= Post.title %>"
             required
           />
-          <h5><strong>Upload display image</strong></h5>
+          <input type="hidden" value=<%= Post.id %> name="postID" >
+          <h5><strong>Change display image</strong></h5>
           <input
             type="file"
             class="form-control mb-4"
             name="image"
             id=""
-            required
           />
           <h5><strong>Add Category</strong></h5>
           <select
@@ -129,17 +130,24 @@
             required
           >
             <% Category.map(category=>{ %>
-            <option value="<%= category %>"><%= category %> </option>
+                <% if(category == Post.category) { %> 
+            <option value="<%= category %>" selected><%= category %> </option>
+                <% } else { %> 
+                    <option value="<%= category %>"><%= category %> </option>
+                <% } %> 
             <% }) %>
           </select>
           <h5><strong>Write your post</strong></h5>
-          <div id="editor"></div>
+          <div id="editor">
+            <%- Post.content %> 
+          </div>
           <textarea
             name="content"
             id="detail"
             cols="30"
             style="display: none;"
             rows="10"
+           
             required
           ></textarea>
           <button type="submit" class="btn btn-primary">ADD POST</button>
@@ -150,10 +158,10 @@
       <div class="card">
         <div class=" bg-primary text-white p-4">
           <i class="fas fa-list-ul fa-6x"></i>
-          <h2 class="float-right font-weight-bold" style="font-size: 50px; text-align: center;"><%= Post.length %> <span class="d-block">Posts</span></h2>
+          <h2 class="float-right font-weight-bold" style="font-size: 50px; text-align: center;">08 <span class="d-block">Posts</span></h2>
         </div>
         <div class="card-footer text-primary">
-          <h6 class="text-center"><a href="/posts"> View Details
+          <h6 class="text-center"><a href=""> View Details
           <i class="fas fa-arrow-alt-circle-right"></i></h6></a>
         </div>
       </div>
@@ -230,6 +238,7 @@
         console.log(quill.container.firstChild.innerHTML);
         $("#detail").val(quill.container.firstChild.innerHTML);
       });
+    
     </script>
   </body>
 </html>

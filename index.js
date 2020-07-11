@@ -53,7 +53,7 @@ require("./config/passport.config")(passport, User);
 // set routes
 app.use("/", homeRoute);
 app.use("/admin", adminRoute);
-app.use("/post", postRoute);
+app.use("/posts", postRoute);
 
 // app.get('/register', (req, res)=>{ res.render('register')})
 

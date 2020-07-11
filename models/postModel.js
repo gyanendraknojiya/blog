@@ -17,6 +17,16 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  Created_at: {
+    type: String,
+    required: true,
+  },
+  Edited_at: {
+    type: String,
+  },
+  author: {
+    type: String,
+  },
 });
 
 const Post = new mongoose.model("Post", postSchema);

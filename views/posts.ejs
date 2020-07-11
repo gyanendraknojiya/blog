@@ -29,11 +29,11 @@
       <div class="collapse navbar-collapse" id="menu">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a href="" class="nav-link">
+            <a href="/admin" class="nav-link">
               <i class="fas fa-chart-bar"></i> Dashboard</a>
           </li>
           <li class="nav-item">
-            <a href="/posts" class="nav-link">
+            <a href="./posts" class="nav-link">
               <i class="fas fa-list-ul"></i> Posts</a>
           </li>
           <li class="nav-item">
@@ -92,7 +92,7 @@
   <div class="container-fluid">
     
     <div class="row"> 
-      <div class="col-8">
+      <div class="col">
         <h2 style="background-color: purple;" class="text-white p-2 ">Latest Posts</h2>
         <div class="container">
         <!-- creating table -->
@@ -103,6 +103,10 @@
               <th>Title</th>
               <th>Category</th>
               <th>Date Posted</th>
+              <th>Date Edited</th>
+              <th>Author</th>
+              <th>Edit  </th>
+              <th>Delete</th>
               <th></th>
             </tr>
           </thead>
@@ -113,9 +117,14 @@
               <td><%= Post.title %> </td>
               <td><%= Post.category %> </td>
               <td><%= Post.Created_at %> </td>
+              <td><%= Post.Edited_at %> </td>
+              <td><%= Post.author %> </td>
               <td><a href="/posts/edit/<%= Post.id %> " class="btn btn-outline-secondary btn-sm">
                  Edit 
               </a></td>
+              <td><a href="/posts/delete/<%= Post.id %> " class="btn btn-danger btn-sm">
+                Delete 
+             </a></td>
             </tr>
           <% }) %> 
       
@@ -123,38 +132,7 @@
         </table>
       </div>
     </div>
-      <div class="col-md-4 mt-4">
-          <div class="card">
-            <div class=" bg-primary text-white p-4">
-              <i class="fas fa-list-ul fa-6x"></i>
-              <h2 class="float-right font-weight-bold" style="font-size: 50px; text-align: center;"><%= Posts.length %>  <span class="d-block">Posts</span></h2>
-            </div>
-            <div class="card-footer text-primary">
-              <h6 class="text-center"><a href="/posts"> View Details
-              <i class="fas fa-arrow-alt-circle-right"></i></h6></a>
-            </div>
-          </div>
-          <div class="card mt-5">
-            <div class=" bg-success text-white p-4 ">
-              <i class="fas fa-list-ul fa-6x"></i>
-              <h2 class="float-right font-weight-bold" style="font-size: 40px; text-align: center;"><%= Category.length %> <span class="d-block">Categories</span></h2>
-            </div>
-            <div class="card-footer text-primary">
-              <h6 class="text-center"><a href=""> View Details
-              <i class="fas fa-arrow-alt-circle-right"></i></h6></a>
-            </div>
-          </div>
-          <div class="card mt-5">
-            <div class=" bg-warning text-white p-4 ">
-              <i class="fas fa-list-ul fa-6x"></i>
-              <h2 class="float-right font-weight-bold" style="font-size: 50px; text-align: center;">2 <span class="d-block">Users</span></h2>
-            </div>
-            <div class="card-footer text-warning">
-              <h6 class="text-center"><a href=""> View Details
-              <i class="fas fa-arrow-alt-circle-right"></i></h6></a>
-            </div>
-          </div>
-      </div> 
+ 
     </div>
   
   <!-- dashboard content ends -->
