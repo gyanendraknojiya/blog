@@ -21,21 +21,23 @@ const upload = multer({ storage: storage });
 
 router.get("/", async (req, res, next) => {
   if (req.isAuthenticated()) {
-  const [results, itemCount] = await Promise.all([
-    Post.find({}).limit(req.query.limit).skip(req.skip).lean().exec(),
-    Post.count({}),
-  ]);
-  const pageCount = Math.ceil(itemCount / req.query.limit);
-  res.render("posts", {
-    Posts: results,
-    pageCount,
-    itemCount,
-    activePage: req.query.page,
-    pages: paginate.getArrayPages(req)(3, pageCount, req.query.page),
-  });
-} else {
-  res.redirect('/admin')
-}
+    const [results, itemCount] = await Promise.all([
+      Post.find({}).limit(req.query.limit).skip(req.skip).lean().exec(),
+      Post.count({}),
+    ]);
+    const pageCount = Math.ceil(itemCount / req.query.limit);
+    res.render("posts", {
+      User: req.user,
+      Posts: results,
+      pageCount,
+      itemCount,
+      activePage: req.query.page,
+      pages: paginate.getArrayPages(req)(3, pageCount, req.query.page),
+    });
+  } else {
+    req.flash("error", "Please login first");
+    res.redirect("/admin");
+  }
 });
 
 router.get("/add", (req, res) => {
@@ -52,6 +54,7 @@ router.get("/add", (req, res) => {
       }
     });
   } else {
+    req.flash("error", "Please login first");
     res.redirect("/admin");
   }
 });
@@ -73,20 +76,28 @@ router.get("/edit/:id", (req, res) => {
       }
     });
   } else {
+    req.flash("error", "Please login first");
     res.redirect("/admin");
   }
 });
 
 router.get("/delete/:id", (req, res) => {
   if (req.isAuthenticated()) {
-    Post.findByIdAndDelete(req.params.id, (err, done) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.redirect("/posts");
-      }
-    });
+    if (req.user.role !== "test") {
+      Post.findByIdAndDelete(req.params.id, (err, done) => {
+        if (err) {
+          console.log(err);
+        } else {
+          req.flash("success", "Post Deleted Successfully");
+          res.redirect("/posts");
+        }
+      });
+    } else {
+      req.flash("error", "Test admin can not delete post");
+      res.redirect("/admin");
+    }
   } else {
+    req.flash("error", "Please login first");
     res.redirect("/admin");
   }
 });
@@ -104,60 +115,81 @@ router.get("/:postName", function (req, res) {
 });
 
 router.post("/add", upload.single("image"), (req, res) => {
-  // Define a JSONobject for the image attributes for saving to database
-  
-  const { title, content, category } = req.body;
-  const date = new Date().toDateString();
-  const newPost = new Post({
-    title: title,
-    content: content,
-    image: req.file.path,
-    category: category,
-    Created_at: date,
-    author: req.user.name,
-  });
-  newPost.save();
-  res.redirect("/admin");
-});
-
-router.post("/edit", upload.single("image"), (req, res) => {
-  const { title, content, category, postID } = req.body;
-  const date = new Date().toDateString();
-  if (req.file) {
-    Post.findByIdAndUpdate(
-      postID,
-      {
+  if (req.isAuthenticated()) {
+    if (req.user.role !== "test") {
+      const { title, content, category } = req.body;
+      const date = new Date().toDateString();
+      const newPost = new Post({
         title: title,
         content: content,
         image: req.file.path,
         category: category,
-        Edited_at: date,
-      },
-      (err, done) => {
-        if (err) {
-          res.send("something went wrong");
-        } else {
-          res.redirect("/admin");
-        }
-      }
-    );
+        Created_at: date,
+        author: req.user.name,
+      });
+      newPost.save();
+      req.flash("success", "Post added successfully");
+      res.redirect("/admin");
+    } else {
+      req.flash("error", "Test admin can not ADD posts");
+      res.redirect("/admin");
+    }
   } else {
-    Post.findByIdAndUpdate(
-      postID,
-      {
-        title: title,
-        content: content,
-        category: category,
-        Edited_at: date,
-      },
-      (err, done) => {
-        if (err) {
-          res.send("something went wrong");
-        } else {
-          res.redirect("/admin");
-        }
+    req.flash("error", "Please login first");
+    res.redirect("/admin");
+  }
+});
+
+router.post("/edit", upload.single("image"), (req, res) => {
+  if (req.isAuthenticated()) {
+    if (req.user.role !== "test") {
+      const { title, content, category, postID } = req.body;
+      const date = new Date().toDateString();
+      if (req.file) {
+        Post.findByIdAndUpdate(
+          postID,
+          {
+            title: title,
+            content: content,
+            image: req.file.path,
+            category: category,
+            Edited_at: date,
+          },
+          (err, done) => {
+            if (err) {
+              res.send("something went wrong");
+            } else {
+              req.flash("success", "Post edited successfully");
+              res.redirect("/admin");
+            }
+          }
+        );
+      } else {
+        Post.findByIdAndUpdate(
+          postID,
+          {
+            title: title,
+            content: content,
+            category: category,
+            Edited_at: date,
+          },
+          (err, done) => {
+            if (err) {
+              res.send("something went wrong");
+            } else {
+              req.flash("success", "Post edited successfully");
+              res.redirect("/admin");
+            }
+          }
+        );
       }
-    );
+    } else {
+      req.flash("error", "Test admin can not edit post");
+      res.redirect("/admin");
+    }
+  } else {
+    req.flash("error", "Please login first");
+    res.redirect("/admin");
   }
 });
 

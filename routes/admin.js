@@ -21,6 +21,7 @@ router.get("/", (req, res) => {
 
 router.get("/logout", (req, res) => {
   req.logout();
+  req.flash('success','LogOut successfully')
   res.redirect("/admin");
 });
 
