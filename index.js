@@ -35,10 +35,16 @@ app.use(function (req, res, next) {
 });
 
 // Database Connection
-mongoose.connect(process.env.MONGO_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+try{
+  mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }).then(app.listen(process.env.PORT, function () {
+    console.log("Server is running at port " + process.env.PORT);
+  }));
+} catch(err){
+  console.log(err)
+}
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -76,6 +82,4 @@ app.use("/posts", postRoute);
 //       });
 // })
 
-app.listen(process.env.PORT, function () {
-  console.log("Server is running at port " + process.env.PORT);
-});
+
