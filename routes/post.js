@@ -105,6 +105,7 @@ router.get("/:postName", function (req, res) {
 
 router.post("/add", upload.single("image"), (req, res) => {
   // Define a JSONobject for the image attributes for saving to database
+  
   const { title, content, category } = req.body;
   const date = new Date().toDateString();
   const newPost = new Post({
