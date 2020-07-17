@@ -7,7 +7,7 @@ router.use(paginate.middleware(9, 20));
 
 router.get("/", async (req, res, next) => {
   const [results, itemCount] = await Promise.all([
-    Post.find({}).sort({Created_at: 1}).limit(req.query.limit).skip(req.skip).lean().exec(),
+    Post.find({}).sort({Created_at: -1}).limit(req.query.limit).skip(req.skip).lean().exec(),
     Post.countDocuments({}),
   ]);
   const pageCount = Math.ceil(itemCount / req.query.limit);
