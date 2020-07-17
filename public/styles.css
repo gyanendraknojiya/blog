@@ -177,6 +177,6 @@ a.btn-card {
 @media (max-width: 400px) {
     .social-icons .fab{
         font-size: 18px;
-        margin: auto 5px;
+        margin: auto 3px;
     }
 }
